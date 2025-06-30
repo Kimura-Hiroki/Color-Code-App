@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>色の表現体験アプリ</title>
+  <style>
+    /* リセット＆ベーススタイル */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #f4f4f9;
+      font-family: "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo, sans-serif;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      line-height: 1.5;
+    }
+    h1 {
+      margin-bottom: 16px;
+      font-size: 2rem;
+      color: #2c3e50;
+      text-align: center;
+    }
+    .instructions {
+      max-width: 600px;
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    /* メインコンテナ */
+    .container {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      padding: 32px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    /* スライダーの設定 */
+    .slider-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .slider-group label {
+      width: 60px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .slider-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .slider-wrapper input[type="range"] {
+      width: 100%;
+      margin: 0 16px;
+      accent-color: var(--accent-color);
+      height: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: accent-color 0.3s ease;
+    }
+    .slider-wrapper input[type="range"]:hover {
+      filter: brightness(1.1);
+    }
+    .slider-wrapper input[type="range"]:focus {
+      outline: none;
+      box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    }
+    .value-display {
+      min-width: 160px;
+      font-size: 0.95rem;
+      font-family: "Consolas", "Courier New", monospace;
+      background-color: #f9f9fb;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .value-display span {
+      display: block;
+    }
+    .value-display .dec {
+      color: #1a1a1a;
+    }
+    .value-display .bin {
+      color: #7f8c8d;
+      font-size: 0.85rem;
+    }
+    .value-display .hex {
+      color: #d35400;
+    }
+
+    /* カラーコード表示 */
+    .code-label {
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-family: "Consolas", "Courier New", monospace;
+      letter-spacing: 1px;
+    }
+    .code-label .hex-part {
+      font-size: 1.4rem;
+    }
+
+    /* カラープレビュー */
+    .preview {
+      margin-top: 16px;
+      text-align: center;
+    }
+    #color-display {
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    /* フッター */
+    footer {
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>色の表現体験アプリ</h1>
+  <p class="instructions">
+    RGB のスライダーを動かして、0～255 までの各チャンネルの値を調整できます。<br>
+    各値は 10進・2進・16進 で表示され、カラーコード（#RRGGBB）もリアルタイムに更新されます。<br>
+    生成された色は下のプレビューで確認できます。
+  </p>
+
+  <div class="container">
+    <!-- スライダー：赤（R） -->
+    <div class="slider-group" style="--accent-color: #e74c3c;">
+      <label for="slider-r" style="color: #e74c3c;">赤 (R)</label>
+      <div class="slider-wrapper">
+        <input type="range" id="slider-r" min="0" max="255" value="128" />
+      </div>
+      <div class="value-display" id="value-r">
+        <span class="dec">10進: 128</span>
+        <span class="bin">2進: 10000000</span>
+        <span class="hex">16進: 80</span>
+      </div>
+    </div>
+
+    <!-- スライダー：緑（G） -->
+    <div class="slider-group" style="--accent-color: #27ae60;">
+      <label for="slider-g" style="color: #27ae60;">緑 (G)</label>
+      <div class="slider-wrapper">
+        <input type="range" id="slider-g" min="0" max="255" value="128" />
+      </div>
+      <div class="value-display" id="value-g">
+        <span class="dec">10進: 128</span>
+        <span class="bin">2進: 10000000</span>
+        <span class="hex">16進: 80</span>
+      </div>
+    </div>
+
+    <!-- スライダー：青（B） -->
+    <div class="slider-group" style="--accent-color: #3498db;">
+      <label for="slider-b" style="color: #3498db;">青 (B)</label>
+      <div class="slider-wrapper">
+        <input type="range" id="slider-b" min="0" max="255" value="128" />
+      </div>
+      <div class="value-display" id="value-b">
+        <span class="dec">10進: 128</span>
+        <span class="bin">2進: 10000000</span>
+        <span class="hex">16進: 80</span>
+      </div>
+    </div>
+
+    <!-- カラーコード表示 -->
+    <div class="code-label" id="code-label">カラーコード #<span class="hex-part" id="hex-r">80</span><span class="hex-part" id="hex-g">80</span><span class="hex-part" id="hex-b">80</span></div>
+
+    <!-- カラープレビュー -->
+    <div class="preview">
+      <div id="color-display"></div>
+    </div>
+  </div>
+
+  <footer>©2025 キムりん＠松本深志高校</footer>
+
+  <script>
+    // DOM要素の取得
+    const sliderR = document.getElementById("slider-r");
+    const sliderG = document.getElementById("slider-g");
+    const sliderB = document.getElementById("slider-b");
+    const valueR = document.getElementById("value-r");
+    const valueG = document.getElementById("value-g");
+    const valueB = document.getElementById("value-b");
+    const colorDisplay = document.getElementById("color-display");
+    const hexR = document.getElementById("hex-r");
+    const hexG = document.getElementById("hex-g");
+    const hexB = document.getElementById("hex-b");
+
+    // 値を更新する関数
+    function updateChannelValue(channelValue, container) {
+      const dec = parseInt(channelValue, 10);
+      const bin = dec.toString(2).padStart(8, "0");
+      const hex = dec.toString(16).toUpperCase().padStart(2, "0");
+
+      container.querySelector(".dec").textContent = `10進: ${dec}`;
+      container.querySelector(".bin").textContent = `2進: ${bin}`;
+      container.querySelector(".hex").textContent = `16進: ${hex}`;
+
+      return hex;
+    }
+
+    // 全体の色を更新
+    function updateColor() {
+      const r = sliderR.value;
+      const g = sliderG.value;
+      const b = sliderB.value;
+
+      const rHex = updateChannelValue(r, valueR);
+      const gHex = updateChannelValue(g, valueG);
+      const bHex = updateChannelValue(b, valueB);
+
+      // カラーコード部分を色分けして表示
+      hexR.textContent = rHex;
+      hexR.style.color = '#e74c3c';
+      hexG.textContent = gHex;
+      hexG.style.color = '#27ae60';
+      hexB.textContent = bHex;
+      hexB.style.color = '#3498db';
+
+      const combinedHex = `#${rHex}${gHex}${bHex}`;
+      colorDisplay.style.backgroundColor = combinedHex;
+    }
+
+    // イベントリスナー登録
+    [sliderR, sliderG, sliderB].forEach(slider => {
+      slider.addEventListener("input", updateColor);
+    });
+
+    // ページ読み込み時に初期表示を設定
+    window.addEventListener("DOMContentLoaded", () => {
+      updateColor();
+    });
+  </script>
+</body>
+</html>
